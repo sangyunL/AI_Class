@@ -1,0 +1,64 @@
+plt.figure(figsize=(15,15))
+sns.countplot(y=data['age'], hue=data['TenYearCHD'])
+plt.title('Age wise data distribution with Disease estimates') # 연령별 확진자 분포
+
+
+plt.figure(figsize=(10,10))
+plt.subplot(2,2,1)
+sns.countplot(y=data['male'])
+plt.ylabel('0-female, 1-Male')
+
+plt.subplot(2,2,2)
+sns.countplot(y=data['male'], hue=data['TenYearCHD'])
+plt.title('Gender wise data distribution') # 성별 비율과 확진자 분포
+
+
+plt.figure(figsize=(10,10))
+plt.subplot(2,2,1)
+sns.countplot(y=data['currentSmoker'])
+plt.ylabel('0-No, 1-Yes')
+
+plt.subplot(2,2,2)
+sns.countplot(y=data['currentSmoker'], hue=data['TenYearCHD'])
+plt.title('Smoker Distribution') #흡연자 비율과 확진자 분포
+
+
+plt.figure(figsize=(10,10))
+plt.subplot(2,2,1)
+sns.countplot(y=data['BPMeds'])
+plt.ylabel('0-No, 1-Yes')
+
+plt.subplot(2,2,2)
+sns.countplot(y=data['BPMeds'], hue=data['TenYearCHD'])
+plt.title('Who used Blood Pressure Medicine') #혈압약 복용자 비율과 확진자 분포
+
+
+plt.figure(figsize=(10,10))
+plt.subplot(2,2,1)
+sns.countplot(y=data['prevalentHyp'])
+plt.ylabel('0-No, 1-Yes')
+
+plt.subplot(2,2,2)
+sns.countplot(y=data['prevalentHyp'], hue=data['TenYearCHD'])
+plt.title('Who had the Hypertensive') #고혈압 환자와 확진자 분포
+
+
+# 데이터 상자그림
+plt.figure(figsize=(15,10))
+sns.set(color_codes=True)
+sns.boxplot(data=data, orient='h', palette = 'Set2',linewidth=2.5) 
+
+corr = data.corr()
+plt.figure(figsize=(14,10))
+
+           
+#상관관계 -1부터 1까지 
+corrs = data.corr(method='pearson')
+plt.figure(figsize=(20, 20))
+
+mask = np.zeros_like(corrs, dtype=np.bool)
+mask[np.triu_indices_from(mask)] = True
+
+sns.heatmap(corrs, annot=True, cmap="RdYlBu_r",cbar_kws={"shrink": .5}, mask=mask, vmin = -1,vmax = 1 )
+plt.show()
+print(corrs['TenYearCHD']) 

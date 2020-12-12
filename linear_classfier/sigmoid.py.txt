@@ -1,0 +1,66 @@
+import pandas as pd
+import numpy as np
+import math
+from matplotlib import pyplot as plt
+
+def sigmoid(x):
+    y = 1/(1+np.exp(-x))
+    return y        
+
+def sigmoid_list(lists):
+    y = np.zeros((len(lists),1))
+    a=[]
+    for i in lists:
+        a.append(sigmoid(i))  
+    y=a
+    return y
+
+df= pd.read_csv('ann_data.csv')
+
+x1 = np.array(df.iloc[:,0:1])
+x2 = np.array(df.iloc[:,1:2])
+tn = np.array(df.iloc[:,2:3])
+
+def zeta(w,b,x1,x2):
+    z=np.zeros((6,1))
+    for idx in range(6):
+        z[idx]= w[0]*x1[idx]+w[1]*x2[idx]+b
+    return z
+
+w = [0.5, 0.5]
+b = 0
+mu = 0.1
+x1 = np.array(df.iloc[:,0:1])
+x2 = np.array(df.iloc[:,1:2])
+tn = np.array(df.iloc[:,2:3])
+
+y = sigmoid_list(zeta(w,b,x1,x2))
+
+for i in range(10000):
+    y = sigmoid_list(zeta(w,b,x1,x2))
+    w[0] = w[0] + mu*sum((tn-y)*y*(np.ones((6,1))-y)*x1)
+    w[1] = w[1] + mu*sum((tn-y)*y*(np.ones((6,1))-y)*x2)           
+    
+    b =b+mu*sum((tn-y)*y*np.ones((6,1)))  
+
+
+def visualize(df,w,b):
+    for idx in range(len(df)):
+        
+        x1_1 = 0
+        y1_1 = (-w[0]*x1_1-b)/w[1]
+        
+        x1_2 = 0.8
+        y1_2 = (-w[0]*x1_2-b)/w[1]
+        
+        # plot samples
+        if df.iloc[idx,2] == 1:
+            plt.plot(df.iloc[idx,0],df.iloc[idx,1],'bo')
+        else:
+            plt.plot(df.iloc[idx,0],df.iloc[idx,1],'ro')
+            
+        #plot classifier
+        
+        plt.plot([x1_1,x1_2],[y1_1,y1_2])
+
+visualize(df,w,b)

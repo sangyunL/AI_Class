@@ -1,0 +1,49 @@
+import numpy as np
+import pandas as pd
+import matplotlib.pyplot as plt
+from sklearn.datasets import load_iris
+from sklearn.model_selection import train_test_split
+
+iris = load_iris()
+print(dir(iris))
+iris.target_names # 3종류 꽃 이름
+iris.target       # 0 1 2 로 종속변수를 나눔
+iris.target.shape # target 갯수
+iris.data         # 독립변수  갯수확인 iris.data.shape
+
+'''
+iris.target == 1 -> 1에 해당하는 부분만 true(1)로 바뀜.
+(iris.target == 1).sum() 해당 부분의 데이터의 갯수 나옴.
+'''
+iris.feature_names  # 독립 변수명 확인.
+
+x_train,x_test,y_train,y_test=train_test_split(iris.data,iris.target,test_size=0.3)
+
+iris_df = pd.DataFrame(x_train,columns=iris.feature_names )
+iris_df
+
+pd.plotting.scatter_matrix(iris_df,c=y_train,s=10,alpha=0.8,figsize=[10,10])
+
+from sklearn.tree import DecisionTreeClassifier
+from sklearn.ensemble import RandomForestClassifier
+
+model = DecisionTreeClassifier()
+model.fit(x_train,y_train)
+model.predict(x_test)  #2차원 배열로 넣어줘야 한다!!!
+
+predict_all = model.predict(x_test)  # 예측 값
+y_test                               # 실제 값
+
+accuracy = ((predict_all-y_test)==0).sum()/len(y_test)*100
+print("모델성능 : "+str(accuracy))
+
+# 메소드로 성능 평가하기.
+score = model.score(x_test,y_test)
+print(score)
+
+from sklearn.ensemble import RandomForestClassifier
+model_RF = RandomForestClassifier()
+model_RF.fit(x_train,y_train)
+
+score_RF=model_RF.score(x_test,y_test)
+print(score_RF)
